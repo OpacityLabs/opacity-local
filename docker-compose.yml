@@ -1,0 +1,32 @@
+services:
+  anvil:
+    platform: linux/amd64
+    build:
+      context: ./docker/anvil
+      dockerfile: Dockerfile.anvil
+    env_file:
+      - .env
+    # networks:
+    #   - opacity_network
+    ports:
+      - "8545:8545"
+
+  registration:
+    platform: linux/amd64
+    build:
+      context: ./docker/registration
+      dockerfile: Dockerfile.registration
+    depends_on:
+      - anvil
+    env_file:
+      - .env
+    volumes:
+      - ./.eigenlayer:/root/.eigenlayer
+    # networks:
+    #   - opacity_network
+
+# networks:
+#   opacity_network:
+#     driver: bridge
+
+
