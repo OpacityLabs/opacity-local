@@ -10,9 +10,9 @@ RUN rm go1.21.0.linux-amd64.tar.gz
 RUN apk update && \
     apk add --no-cache lsof jq
 
-COPY ./create_env.sh /create_env.sh
-RUN chmod +x /create_env.sh
+COPY ./register_operators.sh /register_operators.sh
+RUN chmod +x /register_operators.sh
 COPY ./register.sh /register.sh
 RUN chmod +x /register.sh
 
-ENTRYPOINT ["/create_env.sh"]
+ENTRYPOINT ["/register_operators.sh"]

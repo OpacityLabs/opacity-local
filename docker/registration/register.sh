@@ -36,7 +36,7 @@ fi
 new_account="testacc${new_num}"
 ecdsa_keystore_path="${HOME}/.eigenlayer/operator_keys/${new_account}.ecdsa.key.json"
 bls_keystore_path="${HOME}/.eigenlayer/operator_keys/${new_account}.bls.key.json"
-password="Testacc${new_num}Testacc${new_num}"
+password="Testacc1Testacc1"
 
 echo $password | eigenlayer keys import --insecure --key-type ecdsa $new_account $PRIVATE_KEY  >  /dev/null 2>&1
 echo $password |  eigenlayer keys create --key-type bls --insecure $new_account >  /dev/null 2>&1
