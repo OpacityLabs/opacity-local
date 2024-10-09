@@ -28,6 +28,7 @@ services:
     volumes:
       - ./.eigenlayer/operator_keys/testacc1.bls.key.json:/opacity-avs-node//opacity.bls.key.local.json
       - ./docker/node/opacity.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
     ports:
       - "7047:7047"
     depends_on:
@@ -41,6 +42,7 @@ services:
     volumes:
       - ./.eigenlayer/operator_keys/testacc2.bls.key.json:/opacity-avs-node//opacity.bls.key.local.json
       - ./docker/node/opacity.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
     ports:
       - "7048:7047"
     depends_on:
@@ -54,6 +56,7 @@ services:
     volumes:
       - ./.eigenlayer/operator_keys/testacc3.bls.key.json:/opacity-avs-node//opacity.bls.key.local.json
       - ./docker/node/opacity.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
     ports:
       - "7049:7047"
     depends_on:
