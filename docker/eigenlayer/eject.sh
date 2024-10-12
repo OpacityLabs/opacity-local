@@ -1,8 +1,6 @@
 #!/bin/sh
-
-source .env
-if [ -z "$REGISTRY_COORDINATOR" ]; then
-  echo "Error: REGISTRY_COORDINATOR is not set in the environment variables."
+if [ -z "$REGISTRY_COORDINATOR_ADDRESS" ]; then
+  echo "Error: REGISTRY_COORDINATOR_ADDRESS is not set in the environment variables."
   exit 1
 fi
 if [ -z "$RPC_URL" ]; then
@@ -13,13 +11,13 @@ fi
 
 function eject_operator() {
     operatorID=$1
-    operator=$(cast call ${REGISTRY_COORDINATOR} "function getOperatorFromId(bytes32)" ${operatorID} -r ${RPC_URL} | cast parse-bytes32-address)
+    operator=$(cast call ${REGISTRY_COORDINATOR_ADDRESS} "function getOperatorFromId(bytes32)" ${operatorID} -r ${RPC_URL} | cast parse-bytes32-address)
     echo "Ejecting operator ${operator}"
     if [ $? -ne 0 ]; then
         echo "Error: Failed to get the operator address."
         exit 1
     fi
-    cast send ${REGISTRY_COORDINATOR} "ejectOperator(address,bytes)" ${operator} "0x00" --from ${ejector} --unlocked -r ${RPC_URL} > /dev/null 2>&1
+    cast send ${REGISTRY_COORDINATOR_ADDRESS} "ejectOperator(address,bytes)" ${operator} "0x00" --from ${ejector} --unlocked -r ${RPC_URL} > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo "Error: Failed to eject the operator."
         exit 1
@@ -31,7 +29,7 @@ if [ $? -ne 0 ]; then
   echo -e "${RED}ERROR${RESET} getting the block number"
   exit 1
 fi
-indexRegistry=$(cast call ${REGISTRY_COORDINATOR} "function indexRegistry()" -r ${RPC_URL} | cast parse-bytes32-address)
+indexRegistry=$(cast call ${REGISTRY_COORDINATOR_ADDRESS} "function indexRegistry()" -r ${RPC_URL} | cast parse-bytes32-address)
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get the index registry address."
     exit 1
@@ -44,7 +42,7 @@ fi
 operatorsID=$(cast abi-decode "function(uint8,uint32) returns (bytes32[])" ${operatorsIDRaw})
 operatorsID=$(echo ${operatorsID} | tr -d '[' | tr -d ']' | tr -d ',')
 
-ejector=$(cast call ${REGISTRY_COORDINATOR} "function ejector()" -r ${RPC_URL} | cast parse-bytes32-address)
+ejector=$(cast call ${REGISTRY_COORDINATOR_ADDRESS} "function ejector()" -r ${RPC_URL} | cast parse-bytes32-address)
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get the ejector address."
     exit 1
@@ -59,7 +57,7 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to impersonate the ejector."
     exit 1
 fi
-for operatorID in ${operatorsID[@]}; do
+for operatorID in ${operatorsID}; do
   eject_operator ${operatorID} 
 done
 wait

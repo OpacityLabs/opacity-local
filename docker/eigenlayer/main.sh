@@ -30,6 +30,7 @@ if [ -z "$highest_num" ]; then
 fi
 if [ "$highest_num" -ge 4 ]; then
     echo "Using existing accounts"
+    ./eject.sh
     exit 0
 fi
 
