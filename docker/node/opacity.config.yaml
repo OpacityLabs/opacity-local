@@ -11,4 +11,4 @@ chain_id: 1
 eth_rpc_url: http://ethereum:8545
 operator_address: 0xe743b96d0c9b50a0d902a93c95ccb4ac8749a8c5
 node_public_ip: 0.0.0.0
-operator_bls_keystore_path: ./opacity.bls.key.local.json
+operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
