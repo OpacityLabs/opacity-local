@@ -49,4 +49,5 @@ for i in $(seq 1 $num_accounts); do
         exit 1
     fi
 done
-
+echo "Ejecting"
+./eject.sh

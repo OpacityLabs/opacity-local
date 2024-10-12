@@ -8,7 +8,7 @@ eigenlayer_delegation_manager: 0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A
 chain_id: 1
 
 # Set these
-eth_rpc_url: https://holesky.infura.io/v3/
+eth_rpc_url: http://ethereum:8545
 operator_address: 0xe743b96d0c9b50a0d902a93c95ccb4ac8749a8c5
 node_public_ip: 0.0.0.0
 operator_bls_keystore_path: ./opacity.bls.key.local.json

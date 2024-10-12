@@ -10,9 +10,11 @@ RUN rm go1.21.0.linux-amd64.tar.gz
 RUN apk update && \
     apk add --no-cache lsof jq
 
-COPY ./register_operators.sh /register_operators.sh
-RUN chmod +x /register_operators.sh
+COPY ./main.sh /main.sh
+RUN chmod +x /main.sh
 COPY ./register.sh /register.sh
 RUN chmod +x /register.sh
+COPY ./eject.sh /eject.sh
+RUN chmod +x /eject.sh
 
-ENTRYPOINT ["/register_operators.sh"]
+ENTRYPOINT ["/main.sh"]
