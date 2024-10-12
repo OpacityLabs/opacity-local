@@ -22,26 +22,14 @@ if [ -z "$RPC_URL" ]; then
 fi
 sleep 10
 
-# Find the highest numbered test account
-highest_num=$(ls $HOME/.eigenlayer/operator_keys/testacc*.ecdsa.key.json 2>/dev/null | grep -oE 'testacc[0-9]+' | sed 's/testacc//' | sort -n | tail -1)
+rm -rf $HOME/.eigenlayer/operator_keys/*
 
-if [ -z "$highest_num" ]; then
-    new_num=1
-fi
-if [ "$highest_num" -ge 4 ]; then
-    echo "Using existing accounts"
-    ./eject.sh
-    exit 0
-fi
-
-# Check for TEST_ACCOUNTS environment variable
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
 else
     num_accounts=4
 fi
 
-# Run register.sh the specified number of times
 for i in $(seq 1 $num_accounts); do
     echo "Creating test account $i of $num_accounts"
     ./register.sh
@@ -50,5 +38,4 @@ for i in $(seq 1 $num_accounts); do
         exit 1
     fi
 done
-echo "Ejecting"
 ./eject.sh
