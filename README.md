@@ -1,6 +1,6 @@
-# Opacity AVS Node
+# Opacity Local 
 
-This repository contains the configuration and setup for running Opacity AVS (Actively Validated Service) nodes using Docker Compose.
+This repository contains the configuration and setup for running the Opacity AVS (Actively Validated Service) infrastructure using Docker Compose.
 
 ## Prerequisites
 
