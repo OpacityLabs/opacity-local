@@ -11,7 +11,7 @@ This repository contains the configuration and setup for running the Opacity AVS
 
 1. Clone this repository:
    ```
-   git clone https://github.com/your-repo/opacity-avs-node.git
+   git clone https://github.com/OpacityLabs/opacity-avs-node.git
    cd opacity-avs-node
    ```
 
