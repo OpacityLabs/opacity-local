@@ -13,13 +13,23 @@ services:
     platform: linux/amd64
     build:
       context: ./docker/eigenlayer
-      dockerfile: Dockerfile.nodes
+      dockerfile: Dockerfile.eigenlayer
     depends_on:
       - ethereum
     env_file:
       - .env
     volumes:
       - ./.nodes:/root/.nodes
+  nodeselector:
+    platform: linux/amd64
+    image: opacitylabs/opacity-node-selector:latest
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      eigenlayer:
+        condition: service_completed_successfully
   node1:
     image: opacitylabs/opacity-avs-node:local
     environment:
@@ -31,7 +41,7 @@ services:
     volumes:
       - ./.nodes/operator_keys/testacc1.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc1.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
-      - ./docker/node/opacity.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./.nodes/configs/testacc1.config.yaml:/opacity-avs-node/config/opacity.config.yaml
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
     ports:
@@ -43,13 +53,49 @@ services:
     depends_on:
       eigenlayer: 
         condition: service_completed_successfully
-  nodeselector:
-    platform: linux/amd64
-    image: opacitylabs/opacity-node-selector:latest
-    env_file:
-      - .env
+  node2:
+    image: opacitylabs/opacity-avs-node:local
+    environment:
+      - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
+      - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc2.bls.key.json 
+      - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc2.ecdsa.key.json   
+      - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1      
+      - NODE_IP=http://node2
+    volumes:
+      - ./.nodes/operator_keys/testacc2.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
+      - ./.nodes/operator_keys/testacc2.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
+      - ./.nodes/configs/testacc2.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
+      - ./docker/node/start.sh:/opacity-avs-node/start.sh
     ports:
-      - "8080:8080"
+      - "7048:7047"
+    entrypoint: 
+      - /bin/sh
+      - -c
+      - "chmod +x /opacity-avs-node/start.sh && /opacity-avs-node/start.sh"
     depends_on:
-      eigenlayer:
+      eigenlayer: 
+        condition: service_completed_successfully
+  node3:
+    image: opacitylabs/opacity-avs-node:local
+    environment:
+      - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
+      - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc3.bls.key.json 
+      - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc3.ecdsa.key.json   
+      - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1      
+      - NODE_IP=http://node3
+    volumes:
+      - ./.nodes/operator_keys/testacc3.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
+      - ./.nodes/operator_keys/testacc3.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
+      - ./.nodes/configs/testacc3.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
+      - ./docker/node/start.sh:/opacity-avs-node/start.sh
+    ports:
+      - "7049:7047"
+    entrypoint: 
+      - /bin/sh
+      - -c
+      - "chmod +x /opacity-avs-node/start.sh && /opacity-avs-node/start.sh"
+    depends_on:
+      eigenlayer: 
         condition: service_completed_successfully
