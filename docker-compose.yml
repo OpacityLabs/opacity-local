@@ -27,7 +27,7 @@ services:
       - OPERATOR_BLS_KEY_FILE=/.eigenlayer/operator_keys/testacc1.bls.key.json 
       - OPERATOR_ECDSA_KEY_FILE=/.eigenlayer/operator_keys/testacc1.ecdsa.key.json   
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1      
-      - NODE_IP=http://node1:7047
+      - NODE_IP=http://node1
     volumes:
       - ./.eigenlayer/operator_keys/testacc1.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.eigenlayer/operator_keys/testacc1.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
