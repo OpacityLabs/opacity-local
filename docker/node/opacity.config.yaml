@@ -5,6 +5,6 @@ avs_directory_address: "0x135DDa560e946695d6f155dACaFC6f1F25C1F5AF"
 eigenlayer_delegation_manager: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
 chain_id: 1
 eth_rpc_url: http://ethereum:8545
-operator_address: '0x04e73e25f07a3dd22eff458727960f0c45ce2cac'
+operator_address: '0x09eba04010fc53d69f3aaa86f30bd06796aa44aa'
 node_public_ip: http://node1
 operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json

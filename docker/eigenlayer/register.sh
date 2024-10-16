@@ -68,8 +68,31 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to import ecdsa key for $new_account"
     exit 1
 fi
+cp $HOME/.eigenlayer/operator_keys/${new_account}.ecdsa.key.json $HOME/.nodes/operator_keys/${new_account}.ecdsa.key.json
 echo $password |  eigenlayer keys create --key-type bls --insecure $new_account >  /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to create bls key for $new_account"
     exit 1
 fi
+cp $HOME/.eigenlayer/operator_keys/${new_account}.bls.key.json $HOME/.nodes/operator_keys/${new_account}.bls.key.json
+
+# Create the config file for the new account
+config_file="${HOME}/.nodes/configs/${new_account}.config.yaml"
+
+# Set the node public IP based on the account number
+node_public_ip="http://node${new_num}"
+
+# Create the config file with the correct values
+cat << EOF > "$config_file"
+production: false
+registry_coordinator_address: "0xeCd099fA5048c3738a5544347D8cBc8076E76494"
+opacity_avs_address: "0xCE06c5fe42d22fF827A519396583Fd9f5176E3D3"
+avs_directory_address: "0x135DDa560e946695d6f155dACaFC6f1F25C1F5AF"
+eigenlayer_delegation_manager: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
+chain_id: 1
+eth_rpc_url: http://ethereum:8545
+operator_address: '${ADDRESS}'
+node_public_ip: ${node_public_ip}
+operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
+EOF
+
