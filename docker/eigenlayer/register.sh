@@ -50,7 +50,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Find the highest numbered test account
-highest_num=$(ls $HOME/.eigenlayer/operator_keys/testacc*.ecdsa.key.json 2>/dev/null | grep -oE 'testacc[0-9]+' | sed 's/testacc//' | sort -n | tail -1)
+highest_num=$(ls $HOME/.nodes/operator_keys/testacc*.ecdsa.key.json 2>/dev/null | grep -oE 'testacc[0-9]+' | sed 's/testacc//' | sort -n | tail -1)
 
 if [ -z "$highest_num" ]; then
     new_num=1
@@ -59,8 +59,8 @@ else
 fi
 
 new_account="testacc${new_num}"
-ecdsa_keystore_path="${HOME}/.eigenlayer/operator_keys/${new_account}.ecdsa.key.json"
-bls_keystore_path="${HOME}/.eigenlayer/operator_keys/${new_account}.bls.key.json"
+ecdsa_keystore_path="${HOME}/.nodes/operator_keys/${new_account}.ecdsa.key.json"
+bls_keystore_path="${HOME}/.nodes/operator_keys/${new_account}.bls.key.json"
 password="Testacc1Testacc1"
 
 echo $password | eigenlayer keys import --insecure --key-type ecdsa $new_account $PRIVATE_KEY  >  /dev/null 2>&1
