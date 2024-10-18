@@ -99,3 +99,16 @@ services:
     depends_on:
       eigenlayer: 
         condition: service_completed_successfully
+  prover:
+    image: opacity-simple-prover
+    env_file:
+      - .env
+    entrypoint: 
+      - /bin/sh
+      - -c
+      - "chmod +x /opacity-simple-prover/run_prover.sh && /opacity-simple-prover/run_prover.sh"
+    depends_on:
+      - node1
+      - node2
+      - node3
+    
