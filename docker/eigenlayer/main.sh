@@ -22,7 +22,8 @@ if [ -z "$RPC_URL" ]; then
 fi
 sleep 10
 
-rm -rf $HOME/.eigenlayer/operator_keys/*
+rm -rf $HOME/.nodes/operator_keys/*
+rm -rf $HOME/.nodes/configs/*
 
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
