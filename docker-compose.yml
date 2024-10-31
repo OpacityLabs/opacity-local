@@ -100,7 +100,7 @@ services:
       eigenlayer: 
         condition: service_completed_successfully
   prover:
-    image: opacity-simple-prover
+    image: opacitylabs/opacity-simple-prover
     env_file:
       - .env
     entrypoint: 
