@@ -44,8 +44,10 @@ services:
       - ./.nodes/configs/testacc1.config.yaml:/opacity-avs-node/config/opacity.config.yaml
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
+      - ./docker/node/fixture:/opacity-avs-node/fixture
     ports:
       - "7047:7047"
+      - "6047:6047"
     entrypoint: 
       - /bin/sh
       - -c
@@ -67,8 +69,10 @@ services:
       - ./.nodes/configs/testacc2.config.yaml:/opacity-avs-node/config/opacity.config.yaml
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
+      - ./docker/node/fixture:/opacity-avs-node/fixture
     ports:
       - "7048:7047"
+      - "6048:6047"
     entrypoint: 
       - /bin/sh
       - -c
@@ -90,8 +94,10 @@ services:
       - ./.nodes/configs/testacc3.config.yaml:/opacity-avs-node/config/opacity.config.yaml
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
+      - ./docker/node/fixture:/opacity-avs-node/fixture
     ports:
       - "7049:7047"
+      - "6049:6047"
     entrypoint: 
       - /bin/sh
       - -c

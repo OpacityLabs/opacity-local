@@ -60,9 +60,12 @@ The Docker Compose setup includes the following services:
 - Ethereum RPC: http://localhost:8545
 - Node Selector: http://localhost:8080
 - Opacity AVS Nodes:
-  - Node 1: http://localhost:7047
-  - Node 2: http://localhost:7048
-  - Node 3: http://localhost:7049
+  - Node 1 MPC-TLS: http://localhost:7047
+  - Node 1 BLS-Attestation: http://localhost:6047
+  - Node 2 MPC-TLS: http://localhost:7048
+  - Node 2 BLS-Attestation: http://localhost:6048
+  - Node 3 MPC-TLS: http://localhost:7049
+  - Node 3 BLS-Attestation: http://localhost:6049
 
 ## Notes
 
