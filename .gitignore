@@ -1,3 +1,4 @@
 .nodes/operator_keys/testacc*  
 .nodes/configs/testacc*
+.eigenlayer/operator_keys/testacc*
 .env
