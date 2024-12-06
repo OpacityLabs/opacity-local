@@ -95,5 +95,6 @@ eth_rpc_url: http://ethereum:8545
 operator_address: '${ADDRESS}'
 node_public_ip: ${node_public_ip}
 operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
+operator_id: "0x00"
 EOF
 
