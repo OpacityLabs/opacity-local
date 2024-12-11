@@ -114,6 +114,8 @@ services:
     platform: linux/amd64
     env_file:
       - .env
+    ports:
+      - "5074:5074"
     depends_on:
       - node1
       - node2
