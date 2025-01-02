@@ -8,7 +8,7 @@ services:
       - .env
     ports:
       - "8545:8545"
-
+  
   eigenlayer:
     platform: linux/amd64
     build:
@@ -20,6 +20,7 @@ services:
       - .env
     volumes:
       - ./.nodes:/root/.nodes
+  
   nodeselector:
     platform: linux/amd64
     image: opacitylabs/opacity-node-selector:latest
@@ -30,6 +31,7 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+  
   node1:
     image: opacitylabs/opacity-avs-node:local
     pull_policy: always
@@ -39,10 +41,12 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc1.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node1
+      - SIGNER_ENDPOINT=http://signer:50051
     volumes:
       - ./.nodes/operator_keys/testacc1.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc1.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
       - ./.nodes/configs/testacc1.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./.nodes/operator_keys/testacc1.bls.identifier:/opacity-avs-node/config/remote.bls.identifier
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
       - ./docker/node/fixture:/opacity-avs-node/fixture
@@ -56,6 +60,7 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+  
   node2:
     image: opacitylabs/opacity-avs-node:local
     pull_policy: always
@@ -65,9 +70,11 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc2.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node2
+      - SIGNER_ENDPOINT=http://signer:50051
     volumes:
       - ./.nodes/operator_keys/testacc2.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc2.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
+      - ./.nodes/operator_keys/testacc2.bls.identifier:/opacity-avs-node/config/remote.bls.identifier
       - ./.nodes/configs/testacc2.config.yaml:/opacity-avs-node/config/opacity.config.yaml
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
@@ -82,6 +89,7 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+  
   node3:
     image: opacitylabs/opacity-avs-node:local
     pull_policy: always
@@ -91,10 +99,12 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc3.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node3
+      - SIGNER_ENDPOINT=http://signer:50051
     volumes:
       - ./.nodes/operator_keys/testacc3.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc3.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
       - ./.nodes/configs/testacc3.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+      - ./.nodes/operator_keys/testacc3.bls.identifier:/opacity-avs-node/config/remote.bls.identifier
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
       - ./docker/node/fixture:/opacity-avs-node/fixture
@@ -108,6 +118,7 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+  
   prover:
     image: opacitylabs/opacity-simple-prover:latest
     pull_policy: always
@@ -118,3 +129,14 @@ services:
       - node1
       - node2
       - node3
+  
+  signer:
+    image: ghcr.io/layr-labs/cerberus:0.0.2
+    ports:
+      - "${CERBERUS_METRICS_PORT}:${CERBERUS_METRICS_PORT}"
+      - "${CERBERUS_GRPC_PORT}:${CERBERUS_GRPC_PORT}"
+    environment:
+      - "METRICS_PORT=${CERBERUS_METRICS_PORT}"
+    env_file:
+      - .env
+    restart: unless-stopped

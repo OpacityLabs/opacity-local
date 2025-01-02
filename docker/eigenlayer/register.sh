@@ -74,6 +74,18 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to create bls key for $new_account"
     exit 1
 fi
+private_bls_key=$(./get_bls_key.sh $password $new_account  | grep "Private key:" | awk '{print $3}')
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to get bls key for $new_account"
+    exit 1
+fi
+result=$(grpcurl -plaintext -d '{"privateKey": "'"$private_bls_key"'", "password": "'"$password"'"}' signer:50051  keymanager.v1.KeyManager/ImportKey | jq -r '.publicKey' | tr -d '\n')
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to import bls key for $new_account"
+    echo $result
+    exit 1
+fi
+echo -n $result > $HOME/.nodes/operator_keys/${new_account}.bls.identifier
 cp $HOME/.eigenlayer/operator_keys/${new_account}.bls.key.json $HOME/.nodes/operator_keys/${new_account}.bls.key.json
 
 # Create the config file for the new account
