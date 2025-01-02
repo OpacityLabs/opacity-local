@@ -57,7 +57,11 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to impersonate the ejector."
     exit 1
 fi
+operatorsIDLength=$(echo ${operatorsID} | wc -w)
+countervar=1
 for operatorID in ${operatorsID}; do
   eject_operator ${operatorID} 
+  echo " ejecting operator $countervar out of $operatorsIDLength"
+  countervar=$((countervar + 1))
 done
 wait
