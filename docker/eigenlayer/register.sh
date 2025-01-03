@@ -74,7 +74,8 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to create bls key for $new_account"
     exit 1
 fi
-private_bls_key=$(./get_bls_key.sh $password $new_account  | grep "Private key:" | awk '{print $3}')
+private_bls_key=$(./get_bls_key.sh $password $new_account)
+echo $private_bls_key
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get bls key for $new_account"
     exit 1

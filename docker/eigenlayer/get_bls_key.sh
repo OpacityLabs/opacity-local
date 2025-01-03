@@ -20,9 +20,9 @@ tmux send-keys -t export_key "y" C-m
 sleep 1
 tmux send-keys -t export_key "$PASSWORD" C-m
 
-# Capture the output
+# Capture the output and format it
 sleep 1
-tmux capture-pane -t export_key -p
+tmux capture-pane -t export_key -S - -E - -p | grep -A1 "Private key:" | tr -d 'Private key: \n'
 
 # Kill the session
 tmux kill-session -t export_key
