@@ -39,6 +39,8 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc1.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node1
+      - SIGNER_ENDPOINT=http://signer:50051
+      - MAX_TIME_DIFF_SECONDS=600
     volumes:
       - ./.nodes/operator_keys/testacc1.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc1.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
@@ -65,6 +67,8 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc2.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node2
+      - SIGNER_ENDPOINT=http://signer:50051
+      - MAX_TIME_DIFF_SECONDS=600
     volumes:
       - ./.nodes/operator_keys/testacc2.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc2.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
@@ -91,6 +95,8 @@ services:
       - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc3.ecdsa.key.json
       - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
       - NODE_IP=http://node3
+      - SIGNER_ENDPOINT=http://signer:50051
+      - MAX_TIME_DIFF_SECONDS=600
     volumes:
       - ./.nodes/operator_keys/testacc3.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc3.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
