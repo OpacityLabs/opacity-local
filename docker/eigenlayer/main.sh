@@ -28,7 +28,7 @@ rm -rf $HOME/.nodes/configs/*
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
 else
-    num_accounts=4
+    num_accounts=3
 fi
 
 for i in $(seq 1 $num_accounts); do
