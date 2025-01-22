@@ -128,8 +128,8 @@ services:
     platform: linux/amd64
     env_file:
       - .env
-    # ports:
-    #   - "5074:5074"
+    volumes:
+      - ./.nodes/operator_keys:/app/operator_keys:ro
     depends_on:
       - node1
       - node2
