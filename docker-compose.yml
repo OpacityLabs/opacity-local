@@ -36,6 +36,7 @@ services:
   node1:
     image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
+    platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
       - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc1.bls.key.json
@@ -66,6 +67,7 @@ services:
   node2:
     image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
+    platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
       - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc2.bls.key.json
@@ -96,6 +98,7 @@ services:
   node3:
     image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
+    platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
       - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc3.bls.key.json
@@ -138,6 +141,7 @@ services:
   
   signer:
     image: ghcr.io/layr-labs/cerberus:0.0.2
+    platform: linux/amd64
     ports:
       - "${CERBERUS_METRICS_PORT}:${CERBERUS_METRICS_PORT}"
       - "${CERBERUS_GRPC_PORT}:${CERBERUS_GRPC_PORT}"
