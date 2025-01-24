@@ -24,6 +24,7 @@ services:
   nodeselector:
     platform: linux/amd64
     image: opacitylabs/opacity-node-selector:verify
+    pull_policy: always
     env_file:
       - .env
     ports:
