@@ -23,7 +23,7 @@ services:
   
   nodeselector:
     platform: linux/amd64
-    image: opacitylabs/opacity-node-selector:latest
+    image: opacitylabs/opacity-node-selector:verify
     env_file:
       - .env
     ports:
@@ -33,7 +33,7 @@ services:
         condition: service_completed_successfully
   
   node1:
-    image: opacitylabs/opacity-avs-node:local
+    image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -63,7 +63,7 @@ services:
         condition: service_completed_successfully
   
   node2:
-    image: opacitylabs/opacity-avs-node:local
+    image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -93,7 +93,7 @@ services:
         condition: service_completed_successfully
   
   node3:
-    image: opacitylabs/opacity-avs-node:local
+    image: opacitylabs/opacity-avs-node:verify
     pull_policy: always
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -123,7 +123,7 @@ services:
         condition: service_completed_successfully
   
   prover:
-    image: opacitylabs/opacity-simple-prover:latest
+    image: opacitylabs/opacity-simple-prover:verify
     pull_policy: always
     platform: linux/amd64
     env_file:
