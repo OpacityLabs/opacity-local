@@ -63,7 +63,7 @@ ecdsa_keystore_path="${HOME}/.nodes/operator_keys/${new_account}.ecdsa.key.json"
 bls_keystore_path="${HOME}/.nodes/operator_keys/${new_account}.bls.key.json"
 password="Testacc1Testacc1"
 
-echo $password | eigenlayer keys import --insecure --key-type ecdsa $new_account $PRIVATE_KEY  >  /dev/null 2>&1
+echo $password | eigenlayer keys import --insecure --key-type ecdsa $new_account $PRIVATE_KEY  # >  /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to import ecdsa key for $new_account"
     exit 1
