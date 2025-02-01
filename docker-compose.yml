@@ -34,8 +34,8 @@ services:
         condition: service_completed_successfully
   
   node1:
-    image: opacitylabs/opacity-avs-node:verify
-    pull_policy: always
+    image: opacitylabs/opacity-avs-node:testnet
+    # pull_policy: always
     platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -53,6 +53,7 @@ services:
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
       - ./docker/node/fixture:/opacity-avs-node/fixture
+      - ./.nodes/sgx/node1:/opacity-avs-node/sgx
     ports:
       - "7047:7047"
       - "6047:6047"
@@ -63,10 +64,16 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    privileged: true
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - "/dev/sgx_enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
   
   node2:
-    image: opacitylabs/opacity-avs-node:verify
-    pull_policy: always
+    image: opacitylabs/opacity-avs-node:testnet
+    # pull_policy: always
     platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -84,6 +91,7 @@ services:
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
       - ./docker/node/fixture:/opacity-avs-node/fixture
+      - ./.nodes/sgx/node2:/opacity-avs-node/sgx
     ports:
       - "7048:7047"
       - "6048:6047"
@@ -94,10 +102,16 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    privileged: true
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - "/dev/sgx_enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
   
   node3:
-    image: opacitylabs/opacity-avs-node:verify
-    pull_policy: always
+    image: opacitylabs/opacity-avs-node:testnet
+    # pull_policy: always
     platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -115,6 +129,7 @@ services:
       - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
       - ./docker/node/start.sh:/opacity-avs-node/start.sh
       - ./docker/node/fixture:/opacity-avs-node/fixture
+      - ./.nodes/sgx/node3:/opacity-avs-node/sgx
     ports:
       - "7049:7047"
       - "6049:6047"
@@ -125,6 +140,12 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    privileged: true
+    security_opt:
+      - seccomp:unconfined
+    devices:
+      - "/dev/sgx_enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
   
   prover:
     image: opacitylabs/opacity-simple-prover:verify
