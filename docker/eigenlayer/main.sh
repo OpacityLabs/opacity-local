@@ -24,6 +24,7 @@ sleep 10
 
 rm -rf $HOME/.nodes/operator_keys/*
 rm -rf $HOME/.nodes/configs/*
+rm -rf $HOME/.eigenlayer/operator_keys/*
 
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
