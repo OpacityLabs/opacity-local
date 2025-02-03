@@ -111,3 +111,10 @@ operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
 operator_id: "0x00"
 EOF
 
+# Verify file was created correctly
+echo "Debug: Verifying config file"
+if [ ! -f "${HOME}/.nodes/configs/${new_account}.config.yaml" ]; then
+    echo "Error: Config file not created properly"
+    exit 1
+fi
+ls -la "${HOME}/.nodes/configs/${new_account}.config.yaml"
