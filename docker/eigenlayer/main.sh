@@ -29,7 +29,7 @@ rm -rf $HOME/.eigenlayer/operator_keys/*
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
 else
-    num_accounts=3
+    num_accounts=2 #memory requirements limit the number of nodes that can reasonably be run in a single sgx machine
 fi
 
 for i in $(seq 1 $num_accounts); do

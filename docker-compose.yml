@@ -35,7 +35,7 @@ services:
   
   node1:
     image: opacitylabs/opacity-avs-node:testnet
-    # pull_policy: always
+    pull_policy: always
     platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -45,6 +45,8 @@ services:
       - NODE_IP=http://node1
       - SIGNER_ENDPOINT=http://signer:50051
       - MAX_TIME_DIFF_SECONDS=600
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=1
     volumes:
       - ./.nodes/operator_keys/testacc1.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
       - ./.nodes/operator_keys/testacc1.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
@@ -70,10 +72,22 @@ services:
     devices:
       - "/dev/sgx_enclave:/dev/sgx_enclave"
       - "/dev/sgx_provision:/dev/sgx_provision"
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node1:7047 | grep -q 2000"]
+      start_period: 120s
+      start_interval: 10s
+      timeout: 5s
+      interval: 999999h
   
   node2:
     image: opacitylabs/opacity-avs-node:testnet
-    # pull_policy: always
+    pull_policy: always
     platform: linux/amd64
     environment:
       - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
@@ -100,52 +114,76 @@ services:
       - -c
       - "chmod +x /opacity-avs-node/start.sh && /opacity-avs-node/start.sh"
     depends_on:
-      eigenlayer:
-        condition: service_completed_successfully
+      node1:
+        condition: service_healthy
     privileged: true
     security_opt:
       - seccomp:unconfined
     devices:
       - "/dev/sgx_enclave:/dev/sgx_enclave"
       - "/dev/sgx_provision:/dev/sgx_provision"
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+        reservations:
+          memory: 1G
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node2:7047 | grep -q 2000"]
+      start_period: 180s
+      start_interval: 10s
+      timeout: 5s
+      interval: 999999h
   
-  node3:
-    image: opacitylabs/opacity-avs-node:testnet
-    # pull_policy: always
-    platform: linux/amd64
-    environment:
-      - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
-      - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc3.bls.key.json
-      - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc3.ecdsa.key.json
-      - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
-      - NODE_IP=http://node3
-      - SIGNER_ENDPOINT=http://signer:50051
-      - MAX_TIME_DIFF_SECONDS=600
-    volumes:
-      - ./.nodes/operator_keys/testacc3.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
-      - ./.nodes/operator_keys/testacc3.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
-      - ./.nodes/configs/testacc3.config.yaml:/opacity-avs-node/config/opacity.config.yaml
-      - ./.nodes/operator_keys/testacc3.bls.identifier:/opacity-avs-node/config/remote.bls.identifier
-      - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
-      - ./docker/node/start.sh:/opacity-avs-node/start.sh
-      - ./docker/node/fixture:/opacity-avs-node/fixture
-      - ./.nodes/sgx/node3:/opacity-avs-node/sgx
-    ports:
-      - "7049:7047"
-      - "6049:6047"
-    entrypoint:
-      - /bin/sh
-      - -c
-      - "chmod +x /opacity-avs-node/start.sh && /opacity-avs-node/start.sh"
-    depends_on:
-      eigenlayer:
-        condition: service_completed_successfully
-    privileged: true
-    security_opt:
-      - seccomp:unconfined
-    devices:
-      - "/dev/sgx_enclave:/dev/sgx_enclave"
-      - "/dev/sgx_provision:/dev/sgx_provision"
+  # node3:
+  #   image: opacitylabs/opacity-avs-node:testnet
+  #   # pull_policy: always
+  #   platform: linux/amd64
+  #   environment:
+  #     - OPERATOR_BLS_KEY_PASSWORD=Testacc1Testacc1
+  #     - OPERATOR_BLS_KEY_FILE=/.nodes/operator_keys/testacc3.bls.key.json
+  #     - OPERATOR_ECDSA_KEY_FILE=/.nodes/operator_keys/testacc3.ecdsa.key.json
+  #     - OPERATOR_ECDSA_KEY_PASSWORD=Testacc1Testacc1
+  #     - NODE_IP=http://node3
+  #     - SIGNER_ENDPOINT=http://signer:50051
+  #     - MAX_TIME_DIFF_SECONDS=600
+  #   volumes:
+  #     - ./.nodes/operator_keys/testacc3.bls.key.json:/opacity-avs-node/config/opacity.bls.key.json
+  #     - ./.nodes/operator_keys/testacc3.ecdsa.key.json:/opacity-avs-node/config/opacity.ecdsa.key.json
+  #     - ./.nodes/configs/testacc3.config.yaml:/opacity-avs-node/config/opacity.config.yaml
+  #     - ./.nodes/operator_keys/testacc3.bls.identifier:/opacity-avs-node/config/remote.bls.identifier
+  #     - ./docker/node/config.yaml:/opacity-avs-node/config/config.yaml
+  #     - ./docker/node/start.sh:/opacity-avs-node/start.sh
+  #     - ./docker/node/fixture:/opacity-avs-node/fixture
+  #     - ./.nodes/sgx/node3:/opacity-avs-node/sgx
+  #   ports:
+  #     - "7049:7047"
+  #     - "6049:6047"
+  #   entrypoint:
+  #     - /bin/sh
+  #     - -c
+  #     - "chmod +x /opacity-avs-node/start.sh && /opacity-avs-node/start.sh"
+  #   depends_on:
+  #     node2:
+  #       condition: service_healthy
+  #   privileged: true
+  #   security_opt:
+  #     - seccomp:unconfined
+  #   devices:
+  #     - "/dev/sgx_enclave:/dev/sgx_enclave"
+  #     - "/dev/sgx_provision:/dev/sgx_provision"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         memory: 4G
+  #       reservations:
+  #         memory: 1G
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node3:7047 | grep -q 2000"]
+  #     start_period: 120s
+  #     start_interval: 10s
+  #     timeout: 5s
+  #     interval: 999999h
   
   prover:
     image: opacitylabs/opacity-simple-prover:verify
@@ -156,9 +194,8 @@ services:
     volumes:
       - ./.nodes/operator_keys:/app/operator_keys:ro
     depends_on:
-      - node1
-      - node2
-      - node3
+      node2:
+        condition: service_healthy
   
   signer:
     image: ghcr.io/layr-labs/cerberus:0.0.2
