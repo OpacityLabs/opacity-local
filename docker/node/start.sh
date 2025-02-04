@@ -16,7 +16,13 @@ gramine-sgx-sign \
     --output opacity-avs-node.manifest.sgx
 
 # Run registration if needed
+echo "Starting registration process..."
 /opacity-avs-node/target/release/register /opacity-avs-node/config/opacity.config.yaml 
+if [ $? -ne 0 ]; then
+    echo "Registration failed"
+    exit 1
+fi
+echo "Registration completed successfully"
 
 # Start the node with SGX
 gramine-sgx opacity-avs-node --config-file /opacity-avs-node/config/config.yaml
