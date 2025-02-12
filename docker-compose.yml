@@ -65,6 +65,12 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node1:7047 | grep -q 2000"]
+      start_period: 120s
+      start_interval: 10s
+      timeout: 5s
+      interval: 999999h
   
   node2:
     image: opacitylabs/opacity-avs-node:verify
@@ -96,6 +102,12 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node2:7047 | grep -q 2000"]
+      start_period: 120s
+      start_interval: 10s
+      timeout: 5s
+      interval: 999999h
   
   node3:
     image: opacitylabs/opacity-avs-node:verify
@@ -127,19 +139,28 @@ services:
     depends_on:
       eigenlayer:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -f --http0.9 -w '%{http_code}' http://node3:7047 | grep -q 2000"]
+      start_period: 120s
+      start_interval: 10s
+      timeout: 5s
+      interval: 999999h
   
   prover:
     image: opacitylabs/opacity-simple-prover:verify
-    pull_policy: always
+    # pull_policy: always
     platform: linux/amd64
     env_file:
       - .env
     volumes:
       - ./.nodes/operator_keys:/app/operator_keys:ro
     depends_on:
-      - node1
-      - node2
-      - node3
+      node1:
+        condition: service_healthy
+      node2:
+        condition: service_healthy
+      node3:
+        condition: service_healthy
   
   signer:
     image: ghcr.io/layr-labs/cerberus:0.0.2
