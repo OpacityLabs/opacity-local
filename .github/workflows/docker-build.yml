@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "Eigenlayer Dockerfile changed, building image..."
           cd docker/eigenlayer
-          docker build -t opacitylabs/eigenlayer:dev-latest -f docker/eigenlayer/Dockerfile.eigenlayer .
+          docker build -t opacitylabs/eigenlayer:dev-latest -f Dockerfile.eigenlayer .
           docker push opacitylabs/eigenlayer:latest
 
       - name: Build and Push Ethereum Image
