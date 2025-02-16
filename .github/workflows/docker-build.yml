@@ -35,6 +35,7 @@ jobs:
         if: steps.changes.outputs.eigenlayer == 'true'
         run: |
           echo "Eigenlayer Dockerfile changed, building image..."
+          cd docker/eigenlayer
           docker build -t opacitylabs/eigenlayer:dev-latest -f docker/eigenlayer/Dockerfile.eigenlayer .
           docker push opacitylabs/eigenlayer:latest
 
