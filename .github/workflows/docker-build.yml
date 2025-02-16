@@ -44,4 +44,4 @@ jobs:
         run: |
           echo "Ethereum Dockerfile changed, building image..."
           docker build -t opacitylabs/ethereum:dev-latest -f docker/ethereum/Dockerfile.ethereum .
-          docker push opacitylabs/ethereum:latest
+          docker push opacitylabs/ethereum:dev-latest
