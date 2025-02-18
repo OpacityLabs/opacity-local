@@ -5,7 +5,7 @@ on:
     branches: 
       - "dev"
     paths:
-      - "docker/eigenlayer/Dockerfile.eigenlayer"
+      - "docker/eigenlayer/**"
       - "docker/ethereum/Dockerfile.ethereum"
   workflow_dispatch:
 
@@ -21,7 +21,7 @@ jobs:
         with:
           filters: |
             eigenlayer:
-              - "docker/eigenlayer/Dockerfile.eigenlayer"
+              - "docker/eigenlayer/**"
             ethereum:
               - "docker/ethereum/Dockerfile.ethereum"
 
@@ -34,7 +34,7 @@ jobs:
       - name: Build and Push Eigenlayer Image
         if: steps.changes.outputs.eigenlayer == 'true'
         run: |
-          echo "Eigenlayer Dockerfile changed, building image..."
+          echo "Something has changed in eigenlayer directory, building image..."
           cd docker/eigenlayer
           docker build -t opacitylabs/eigenlayer:dev-latest -f Dockerfile.eigenlayer .
           docker push opacitylabs/eigenlayer:dev-latest
