@@ -40,3 +40,4 @@ for i in $(seq 1 $num_accounts); do
     fi
 done
 ./eject.sh
+./create_configmaps.sh

@@ -8,8 +8,13 @@ RUN go install github.com/Layr-Labs/eigenlayer-cli/cmd/eigenlayer@v0.10.3
 RUN mv /go/bin/eigenlayer ./bin/
 RUN rm go1.21.0.linux-amd64.tar.gz
 RUN apk update && \
-    apk add --no-cache lsof jq tmux bash && \ 
+    apk add --no-cache lsof jq tmux bash curl && \ 
     apk add --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing grpcurl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+    && chmod +x kubectl \
+    && mv kubectl /usr/local/bin/
+COPY create_configmaps.sh /create_configmaps.sh
+RUN chmod +x /create_configmaps.sh
 COPY ./main.sh /main.sh
 RUN chmod +x /main.sh
 COPY ./register.sh /register.sh
