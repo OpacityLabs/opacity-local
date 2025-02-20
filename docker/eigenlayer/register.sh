@@ -111,11 +111,11 @@ node_public_ip="http://node${new_num}"
 cat << EOF > "$config_file"
 production: false
 opacity_node_selector_address: 0x8a2c56230E89C4636e5b7878541e66aBA2091FcD
-registry_coordinator_address: "0xeCd099fA5048c3738a5544347D8cBc8076E76494"
-opacity_avs_address: "0xCE06c5fe42d22fF827A519396583Fd9f5176E3D3"
-avs_directory_address: "0x135DDa560e946695d6f155dACaFC6f1F25C1F5AF"
-eigenlayer_delegation_manager: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
-chain_id: 1
+registry_coordinator_address: "0x3e43AA225b5cB026C5E8a53f62572b10D526a50B"
+opacity_avs_address: "0xbfc5d26C6eEb46475eB3960F5373edC5341eE535"
+avs_directory_address: "0x055733000064333CaDDbC92763c58BF0192fFeBf"
+eigenlayer_delegation_manager: "0xA44151489861Fe9e3055d95adC98FbD462B948e7"
+chain_id: 17000
 eth_rpc_url: http://ethereum:8545
 operator_address: '${ADDRESS}'
 node_public_ip: ${node_public_ip}
