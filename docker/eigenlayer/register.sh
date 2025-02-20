@@ -27,18 +27,31 @@ if [ -z "$RPC_URL" ]; then
   echo "Error: RPC_URL is not set in the environment variables."
   exit 1
 fi
-
+if [ "$ENVIRONMENT" = "testnet" ]; then
+  if [ -z "$FUNDED_KEY" ]; then
+    echo "Error: FUNDED_KEY is not set in the environment variables. This is required for testnet."
+    exit 1
+  fi
+fi
 
 
 ACCOUNT_INFO=$(cast wallet new --json)
 PRIVATE_KEY=$(echo "$ACCOUNT_INFO" | jq -r '.[0].private_key')
 ADDRESS=$(echo "$ACCOUNT_INFO" | jq -r '.[0].address')
 
-cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to set balance for $ADDRESS"
-    exit 1
-fi
+if [ "$DEPLOY_ENV" = "TESTNET" ]; then
+        cast s "$public_key" --value 50000000000000000 --private-key "$FUNDED_KEY" -r "$RPC_URL" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to give operator $index balance"
+            exit 1
+        fi
+    else
+        cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to set balance for $ADDRESS"
+            exit 1
+        fi
+    fi
 MINT_FUNCTION="submit(address _referral)"
 cast send $LST_CONTRACT_ADDRESS "$MINT_FUNCTION" $ADDRESS "0x0000000000000000000000000000000000000000" --private-key $PRIVATE_KEY --value 110000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
@@ -55,7 +68,7 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to deposit into strategy for $LST_STRATEGY_ADDRESS"
     exit 1
 fi
-cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator((address,address,uint32), string)" "($ADDRESS,`cast az`,0)" "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator(address,uint32,string)" `cast az` 0 "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to register as operator for $DELEGATION_MANAGER_ADDRESS"
     exit 1
