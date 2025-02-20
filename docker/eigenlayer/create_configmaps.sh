@@ -2,13 +2,11 @@
 
 NAMESPACE="test-deploy"
 
-# By default, we loop from 1..3, unless user sets NODES
 DEFAULT_MAX=3
 MAX="${NODES:-$DEFAULT_MAX}"
 
 echo "Looping nodes from 1 to $MAX..."
 
-# We'll accumulate all operator_keys for the Prover here:
 AGGREGATOR_CONTENT=""
 
 for i in $(seq 1 $MAX); do
@@ -20,7 +18,6 @@ for i in $(seq 1 $MAX); do
   BLS_ID="/root/.nodes/operator_keys/${NODE}.bls.identifier"
   CONFIG_FILE="/root/.nodes/configs/${NODE}.config.yaml"
 
-  # Check if files exist before creating the ConfigMap
   if [ ! -f "$BLS_KEY" ] || [ ! -f "$ECDSA_KEY" ] || [ ! -f "$BLS_ID" ] || [ ! -f "$CONFIG_FILE" ]; then
     echo "Skipping $NODE because one or more files are missing."
     continue
@@ -28,7 +25,6 @@ for i in $(seq 1 $MAX); do
 
   echo "Creating ConfigMap for $NODE..."
 
-  # Create (or update) the node-specific ConfigMap with 4 files
   cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ConfigMap
@@ -46,7 +42,6 @@ $(sed 's/^/    /' "$BLS_ID")
 $(sed 's/^/    /' "$CONFIG_FILE")
 EOF
 
-  # Also append to the Prover aggregator (only operator_keys, no config.yaml):
   AGGREGATOR_CONTENT="$AGGREGATOR_CONTENT
 
   ${NODE}.bls.key.json: |
@@ -58,7 +53,6 @@ $(sed 's/^/    /' "$BLS_ID")
 "
 done
 
-# After the loop, if aggregator has content, create the single "prover-config"
 if [ -n "$AGGREGATOR_CONTENT" ]; then
   echo "Creating aggregator Prover ConfigMap (prover-config) with all operator_keys..."
   cat <<EOF | kubectl apply -f -
