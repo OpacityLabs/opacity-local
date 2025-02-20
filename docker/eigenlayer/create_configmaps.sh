@@ -2,12 +2,6 @@
 
 NAMESPACE="test-deploy"
 
-# Wait until we can communicate with the Kubernetes API
-until kubectl version >/dev/null 2>&1; do
-  echo "Waiting for access to Kubernetes..."
-  sleep 5
-done
-
 # By default, we loop from 1..3, unless user sets NODES
 DEFAULT_MAX=3
 MAX="${NODES:-$DEFAULT_MAX}"
