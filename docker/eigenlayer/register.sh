@@ -115,7 +115,7 @@ registry_coordinator_address: "0x3e43AA225b5cB026C5E8a53f62572b10D526a50B"
 opacity_avs_address: "0xbfc5d26C6eEb46475eB3960F5373edC5341eE535"
 avs_directory_address: "0x055733000064333CaDDbC92763c58BF0192fFeBf"
 eigenlayer_delegation_manager: "0xA44151489861Fe9e3055d95adC98FbD462B948e7"
-chain_id: 1
+chain_id: 17000
 eth_rpc_url: http://ethereum:8545
 operator_address: '${ADDRESS}'
 node_public_ip: ${node_public_ip}
