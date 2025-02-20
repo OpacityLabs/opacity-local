@@ -37,12 +37,12 @@ jobs:
         run: |
           echo "Something has changed in eigenlayer directory, building image..."
           cd docker/eigenlayer
-          docker build -t opacitylabs/eigenlayer:dev-latest -f Dockerfile.eigenlayer .
-          docker push opacitylabs/eigenlayer:dev-latest
+          docker build -t opacitylabs/eigenlayer:k8s-latest -f Dockerfile.eigenlayer .
+          docker push opacitylabs/eigenlayer:k8s-latest
 
       - name: Build and Push Ethereum Image
         if: steps.changes.outputs.ethereum == 'true'
         run: |
           echo "Ethereum Dockerfile changed, building image..."
-          docker build -t opacitylabs/ethereum:k8s-latest -f docker/ethereum/Dockerfile.ethereum .
-          docker push opacitylabs/ethereum:k8s-latest
+          docker build -t opacitylabs/ethereum:dev-latest -f docker/ethereum/Dockerfile.ethereum .
+          docker push opacitylabs/ethereum:dev-latest
