@@ -147,7 +147,7 @@ services:
       interval: 999999h
   
   prover:
-    image: opacitylabs/opacity-simple-prover:verify
+    image: opacity-simple-prover:testnet
     # pull_policy: always
     platform: linux/amd64
     env_file:
