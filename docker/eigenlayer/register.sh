@@ -16,34 +16,41 @@ if [ -z "$RPC_URL" ]; then
   exit 1
 fi
 
-
-
 ACCOUNT_INFO=$(cast wallet new --json)
 PRIVATE_KEY=$(echo "$ACCOUNT_INFO" | jq -r '.[0].private_key')
 ADDRESS=$(echo "$ACCOUNT_INFO" | jq -r '.[0].address')
+if [ "$ENVIRONMENT" = "TESTNET" ]; then
+        cast s $ADDRESS --value 50000000000000000 --private-key "$FUNDED_KEY" -r "$RPC_URL" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then   
+            echo "Error: Failed to give operator $index balance"
+            exit 1
+        fi
+    else
+        cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL  > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to set balance for $ADDRESS"
+            exit 1
+        fi
+    fi
 
-cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to set balance for $ADDRESS"
-    exit 1
-fi
+
 MINT_FUNCTION="submit(address _referral)"
-cast send $LST_CONTRACT_ADDRESS "$MINT_FUNCTION" $ADDRESS "0x0000000000000000000000000000000000000000" --private-key $PRIVATE_KEY --value 110000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $LST_CONTRACT_ADDRESS "$MINT_FUNCTION" $ADDRESS "0x0000000000000000000000000000000000000000" --private-key $PRIVATE_KEY --value 10000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to mint LST for $ADDRESS"
     exit 1
 fi
-cast send $LST_CONTRACT_ADDRESS "approve(address,uint256)" $STRATEGY_MANAGER_ADDRESS 100000000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $LST_CONTRACT_ADDRESS "approve(address,uint256)" $STRATEGY_MANAGER_ADDRESS 1000000000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to approve LST for $STRATEGY_MANAGER_ADDRESS"
     exit 1
 fi
-cast send $STRATEGY_MANAGER_ADDRESS "depositIntoStrategy(address,address,uint256)" $LST_STRATEGY_ADDRESS $LST_CONTRACT_ADDRESS 100000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $STRATEGY_MANAGER_ADDRESS "depositIntoStrategy(address,address,uint256)" $LST_STRATEGY_ADDRESS $LST_CONTRACT_ADDRESS 10000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL  > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to deposit into strategy for $LST_STRATEGY_ADDRESS"
     exit 1
 fi
-cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator((address,address,uint32), string)" "($ADDRESS,`cast az`,0)" "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator(address,uint32,string)" `cast az` 0 "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to register as operator for $DELEGATION_MANAGER_ADDRESS"
     exit 1
@@ -75,7 +82,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 private_bls_key=$(./get_bls_key.sh $password $new_account)
-echo $private_bls_key
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get bls key for $new_account"
     exit 1
@@ -99,12 +105,12 @@ node_public_ip="http://node${new_num}"
 cat << EOF > "$config_file"
 production: false
 opacity_node_selector_address: 0x8a2c56230E89C4636e5b7878541e66aBA2091FcD
-registry_coordinator_address: "0xeCd099fA5048c3738a5544347D8cBc8076E76494"
-opacity_avs_address: "0xCE06c5fe42d22fF827A519396583Fd9f5176E3D3"
-avs_directory_address: "0x135DDa560e946695d6f155dACaFC6f1F25C1F5AF"
-eigenlayer_delegation_manager: "0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A"
-chain_id: 1
-eth_rpc_url: http://ethereum:8545
+registry_coordinator_address: "0x3e43AA225b5cB026C5E8a53f62572b10D526a50B"
+opacity_avs_address: "0xbfc5d26C6eEb46475eB3960F5373edC5341eE535"
+avs_directory_address: "0x055733000064333CaDDbC92763c58BF0192fFeBf"
+eigenlayer_delegation_manager: "0xA44151489861Fe9e3055d95adC98FbD462B948e7"
+chain_id: 17000
+eth_rpc_url: '${RPC_URL}'
 operator_address: '${ADDRESS}'
 node_public_ip: ${node_public_ip}
 operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
