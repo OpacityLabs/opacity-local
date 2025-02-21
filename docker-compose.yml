@@ -36,7 +36,7 @@ services:
         condition: service_completed_successfully
   
   node1:
-    image: opacitylabs/opacity-avs-node:verify
+    image: opacitylabs/opacity-avs-node:testnet
     pull_policy: always
     platform: linux/amd64
     environment:
@@ -73,7 +73,7 @@ services:
       interval: 999999h
   
   node2:
-    image: opacitylabs/opacity-avs-node:verify
+    image: opacitylabs/opacity-avs-node:testnet
     pull_policy: always
     platform: linux/amd64
     environment:
@@ -110,7 +110,7 @@ services:
       interval: 999999h
   
   node3:
-    image: opacitylabs/opacity-avs-node:verify
+    image: opacitylabs/opacity-avs-node:testnet
     pull_policy: always
     platform: linux/amd64
     environment:
