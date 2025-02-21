@@ -148,7 +148,7 @@ services:
   
   prover:
     image: opacitylabs/opacity-simple-prover:verify
-    # pull_policy: always
+    pull_policy: always
     platform: linux/amd64
     env_file:
       - .env
