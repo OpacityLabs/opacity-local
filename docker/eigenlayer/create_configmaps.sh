@@ -1,7 +1,5 @@
 #!/bin/sh
 
-NAMESPACE="test-deploy"
-
 DEFAULT_MAX=3
 MAX="${NODES:-$DEFAULT_MAX}"
 
