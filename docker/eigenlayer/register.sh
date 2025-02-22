@@ -28,34 +28,41 @@ if [ -z "$RPC_URL" ]; then
   exit 1
 fi
 
-
-
 ACCOUNT_INFO=$(cast wallet new --json)
 PRIVATE_KEY=$(echo "$ACCOUNT_INFO" | jq -r '.[0].private_key')
 ADDRESS=$(echo "$ACCOUNT_INFO" | jq -r '.[0].address')
+if [ "$ENVIRONMENT" = "TESTNET" ]; then
+        cast s $ADDRESS --value 50000000000000000 --private-key "$FUNDED_KEY" -r "$RPC_URL" > /dev/null 2>&1
+        if [ $? -ne 0 ]; then   
+            echo "Error: Failed to give operator $index balance"
+            exit 1
+        fi
+    else
+        cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL  > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            echo "Error: Failed to set balance for $ADDRESS"
+            exit 1
+        fi
+    fi
 
-cast rpc anvil_setBalance $ADDRESS 0x10000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    echo "Error: Failed to set balance for $ADDRESS"
-    exit 1
-fi
+
 MINT_FUNCTION="submit(address _referral)"
-cast send $LST_CONTRACT_ADDRESS "$MINT_FUNCTION" $ADDRESS "0x0000000000000000000000000000000000000000" --private-key $PRIVATE_KEY --value 110000000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $LST_CONTRACT_ADDRESS "$MINT_FUNCTION" $ADDRESS "0x0000000000000000000000000000000000000000" --private-key $PRIVATE_KEY --value 10000000000000000 --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to mint LST for $ADDRESS"
     exit 1
 fi
-cast send $LST_CONTRACT_ADDRESS "approve(address,uint256)" $STRATEGY_MANAGER_ADDRESS 100000000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $LST_CONTRACT_ADDRESS "approve(address,uint256)" $STRATEGY_MANAGER_ADDRESS 1000000000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to approve LST for $STRATEGY_MANAGER_ADDRESS"
     exit 1
 fi
-cast send $STRATEGY_MANAGER_ADDRESS "depositIntoStrategy(address,address,uint256)" $LST_STRATEGY_ADDRESS $LST_CONTRACT_ADDRESS 100000000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $STRATEGY_MANAGER_ADDRESS "depositIntoStrategy(address,address,uint256)" $LST_STRATEGY_ADDRESS $LST_CONTRACT_ADDRESS 10000000000000000 --private-key $PRIVATE_KEY --rpc-url $RPC_URL  > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to deposit into strategy for $LST_STRATEGY_ADDRESS"
     exit 1
 fi
-cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator((address,address,uint32), string)" "($ADDRESS,`cast az`,0)" "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
+cast send $DELEGATION_MANAGER_ADDRESS "registerAsOperator(address,uint32,string)" `cast az` 0 "foo.bar" --private-key $PRIVATE_KEY --rpc-url $RPC_URL > /dev/null 2>&1
 if [ $? -ne 0 ]; then
     echo "Error: Failed to register as operator for $DELEGATION_MANAGER_ADDRESS"
     exit 1
@@ -87,7 +94,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 private_bls_key=$(./get_bls_key.sh $password $new_account)
-echo $private_bls_key
 if [ $? -ne 0 ]; then
     echo "Error: Failed to get bls key for $new_account"
     exit 1

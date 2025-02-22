@@ -20,6 +20,13 @@ if [ -z "$RPC_URL" ]; then
   echo "Error: RPC_URL is not set in the environment variables."
   exit 1
 fi
+
+if [ "$ENVIRONMENT" = "TESTNET" ]; then
+  if [ -z "$FUNDED_KEY" ]; then
+    echo "Error: FUNDED_KEY is not set in the environment variables. This is required for testnet."
+    exit 1
+  fi
+fi
 sleep 10
 
 rm -rf $HOME/.nodes/operator_keys/*
@@ -39,5 +46,18 @@ for i in $(seq 1 $num_accounts); do
         exit 1
     fi
 done
-./eject.sh
-./create_configmaps.sh
+if [ "$ENVIRONMENT" != "TESTNET" ]; then
+   ./eject.sh
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to eject operators"
+        exit 1
+    fi
+fi
+
+if [ "$DEPLOY_ENV" == "k8s" ]; then
+   ./create_configmaps.sh
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create configmaps"
+        exit 1
+    fi
+fi
