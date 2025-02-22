@@ -32,6 +32,17 @@ sleep 10
 rm -rf $HOME/.nodes/operator_keys/*
 rm -rf $HOME/.nodes/configs/*
 
+ensure_directory() {
+    if [ ! -d "$1" ]; then
+        echo "Creating missing directory: $1"
+        mkdir -p "$1"
+    fi
+}
+
+ensure_directory "/root/.nodes/operator_keys"
+ensure_directory "/root/.nodes/configs"
+ensure_directory "/root/.eigenlayer/operator_keys"
+
 if [ -n "$TEST_ACCOUNTS" ]; then
     num_accounts=$TEST_ACCOUNTS
 else
