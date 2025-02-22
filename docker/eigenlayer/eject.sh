@@ -64,4 +64,3 @@ for operatorID in ${operatorsID}; do
   echo " ejecting operator $countervar out of $operatorsIDLength"
   countervar=$((countervar + 1))
 done
-wait

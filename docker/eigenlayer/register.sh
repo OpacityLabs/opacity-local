@@ -1,4 +1,16 @@
 #!/bin/sh
+
+ensure_directory() {
+    if [ ! -d "$1" ]; then
+        echo "Creating missing directory: $1"
+        mkdir -p "$1"
+    fi
+}
+
+ensure_directory "/root/.nodes/operator_keys"
+ensure_directory "/root/.nodes/configs"
+ensure_directory "/root/.eigenlayer/operator_keys"
+
 if [ -z "$LST_CONTRACT_ADDRESS" ]; then
   echo "Error: LST_CONTRACT_ADDRESS is not set in the environment variables."
   exit 1
@@ -99,7 +111,7 @@ cp $HOME/.eigenlayer/operator_keys/${new_account}.bls.key.json $HOME/.nodes/oper
 config_file="${HOME}/.nodes/configs/${new_account}.config.yaml"
 
 # Set the node public IP based on the account number
-node_public_ip="http://node${new_num}"
+node_public_ip="http://node${new_num}.test-deploy.svc.cluster.local"
 
 # Create the config file with the correct values
 cat << EOF > "$config_file"

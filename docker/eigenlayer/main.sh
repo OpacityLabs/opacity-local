@@ -53,3 +53,11 @@ if [ "$ENVIRONMENT" != "TESTNET" ]; then
         exit 1
     fi
 fi
+
+if [ "$DEPLOY_ENV" == "k8s" ]; then
+   ./create_configmaps.sh
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create configmaps"
+        exit 1
+    fi
+fi
