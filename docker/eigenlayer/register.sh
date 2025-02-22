@@ -105,7 +105,7 @@ cp $HOME/.eigenlayer/operator_keys/${new_account}.bls.key.json $HOME/.nodes/oper
 config_file="${HOME}/.nodes/configs/${new_account}.config.yaml"
 
 # Set the node public IP based on the account number
-node_public_ip="http://node${new_num}"
+node_public_ip="http://node${new_num}.test-deploy.svc.cluster.local"
 
 # Create the config file with the correct values
 cat << EOF > "$config_file"
@@ -116,7 +116,7 @@ opacity_avs_address: "0xbfc5d26C6eEb46475eB3960F5373edC5341eE535"
 avs_directory_address: "0x055733000064333CaDDbC92763c58BF0192fFeBf"
 eigenlayer_delegation_manager: "0xA44151489861Fe9e3055d95adC98FbD462B948e7"
 chain_id: 17000
-eth_rpc_url: http://ethereum:8545
+eth_rpc_url: '${RPC_URL}'
 operator_address: '${ADDRESS}'
 node_public_ip: ${node_public_ip}
 operator_bls_keystore_path: /opacity-avs-node/config/opacity.bls.key.json
