@@ -114,7 +114,7 @@ config_file="${HOME}/.nodes/configs/${new_account}.config.yaml"
 if [ "$DEPLOY_ENV" == "k8s" ]; then
     node_public_ip="http://node${new_num}.test-deploy.svc.cluster.local"
 else
-    node_public_ip="http://localhost:${new_num}"
+    node_public_ip="http://node${new_num}"
 fi
 
 # Create the config file with the correct values
