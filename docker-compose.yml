@@ -23,7 +23,7 @@ services:
   
   nodeselector:
     platform: linux/amd64
-    image: opacitylabs/opacity-node-selector:verify
+    image: opacitylabs/opacity-node-selector:dev-latest
     pull_policy: always
     env_file:
       - .env

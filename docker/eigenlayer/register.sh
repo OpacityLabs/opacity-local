@@ -110,8 +110,12 @@ cp $HOME/.eigenlayer/operator_keys/${new_account}.bls.key.json $HOME/.nodes/oper
 # Create the config file for the new account
 config_file="${HOME}/.nodes/configs/${new_account}.config.yaml"
 
-# Set the node public IP based on the account number
-node_public_ip="http://node${new_num}.test-deploy.svc.cluster.local"
+# Set the node public IP based on the account number and environment
+if [ "$DEPLOY_ENV" == "k8s" ]; then
+    node_public_ip="http://node${new_num}.test-deploy.svc.cluster.local"
+else
+    node_public_ip="http://localhost:${new_num}"
+fi
 
 # Create the config file with the correct values
 cat << EOF > "$config_file"
