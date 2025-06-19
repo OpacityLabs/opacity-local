@@ -1,19 +1,21 @@
 services:
   ethereum:
-    platform: linux/amd64
-    build:
-      context: ./docker/ethereum
-      dockerfile: Dockerfile.ethereum
+    image: opacitylabs/ethereum-local
+    # platform: linux/amd64
+    # build:
+    #   context: ./docker/ethereum
+    #   dockerfile: Dockerfile.ethereum
     env_file:
       - .env
     ports:
       - "8545:8545"
   
   eigenlayer:
-    platform: linux/amd64
-    build:
-      context: ./docker/eigenlayer
-      dockerfile: Dockerfile.eigenlayer
+    image: opacitylabs/eigenlayer-local
+    # platform: linux/amd64
+    # build:
+    #   context: ./docker/eigenlayer
+    #   dockerfile: Dockerfile.eigenlayer
     depends_on:
       - ethereum
     env_file:
