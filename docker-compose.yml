@@ -1,6 +1,7 @@
 services:
   ethereum:
     image: opacitylabs/ethereum-local
+    pull_policy: always
     # platform: linux/amd64
     # build:
     #   context: ./docker/ethereum
@@ -12,6 +13,7 @@ services:
   
   eigenlayer:
     image: opacitylabs/eigenlayer-local
+    pull_policy: always
     # platform: linux/amd64
     # build:
     #   context: ./docker/eigenlayer
