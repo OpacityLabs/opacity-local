@@ -1,6 +1,6 @@
 services:
   ethereum:
-    image: opacitylabs/ethereum-local
+    image: opacitylabs/ethereum-local:dev
     pull_policy: always
     # platform: linux/amd64
     # build:
@@ -12,7 +12,7 @@ services:
       - "8545:8545"
   
   eigenlayer:
-    image: opacitylabs/eigenlayer-local
+    image: opacitylabs/eigenlayer-local:dev
     pull_policy: always
     # platform: linux/amd64
     # build:

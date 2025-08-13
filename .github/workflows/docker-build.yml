@@ -37,12 +37,22 @@ jobs:
         run: |
           echo "Something has changed in eigenlayer directory, building image..."
           cd docker/eigenlayer
-          docker build -t opacitylabs/eigenlayer:k8s-latest -f Dockerfile.eigenlayer .
-          docker push opacitylabs/eigenlayer:k8s-latest
+          if [ "${{ github.ref_name }}" == "dev" ]; then
+            docker build -t opacitylabs/eigenlayer-local:dev -f Dockerfile.eigenlayer .
+            docker push opacitylabs/eigenlayer-local:dev
+          elif [ "${{ github.ref_name }}" == "k8s" ]; then
+            docker build -t opacitylabs/eigenlayer:k8s-latest -f Dockerfile.eigenlayer .
+            docker push opacitylabs/eigenlayer:k8s-latest
+          fi
 
       - name: Build and Push Ethereum Image
         if: steps.changes.outputs.ethereum == 'true'
         run: |
           echo "Ethereum Dockerfile changed, building image..."
-          docker build -t opacitylabs/ethereum:dev-latest -f docker/ethereum/Dockerfile.ethereum .
-          docker push opacitylabs/ethereum:dev-latest
+          if [ "${{ github.ref_name }}" == "dev" ]; then
+            docker build -t opacitylabs/ethereum-local:dev -f docker/ethereum/Dockerfile.ethereum docker/ethereum
+            docker push opacitylabs/ethereum-local:dev
+          elif [ "${{ github.ref_name }}" == "k8s" ]; then
+            docker build -t opacitylabs/ethereum:k8s-latest -f docker/ethereum/Dockerfile.ethereum docker/ethereum
+            docker push opacitylabs/ethereum:k8s-latest
+          fi
