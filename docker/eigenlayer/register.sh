@@ -1,4 +1,16 @@
 #!/bin/sh
+
+ensure_directory() {
+    if [ ! -d "$1" ]; then
+        echo "Creating missing directory: $1"
+        mkdir -p "$1"
+    fi
+}
+
+ensure_directory "/root/.nodes/operator_keys"
+ensure_directory "/root/.nodes/configs"
+ensure_directory "/root/.eigenlayer/operator_keys"
+
 if [ -z "$LST_CONTRACT_ADDRESS" ]; then
   echo "Error: LST_CONTRACT_ADDRESS is not set in the environment variables."
   exit 1

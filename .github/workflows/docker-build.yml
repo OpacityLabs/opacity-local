@@ -1,0 +1,58 @@
+name: CI to Build Docker Images
+
+on:
+  push:
+    branches: 
+      - "dev"
+      - "k8s"
+    paths:
+      - "docker/eigenlayer/**"
+      - "docker/ethereum/Dockerfile.ethereum"
+  workflow_dispatch:
+
+jobs:
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check changed files
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            eigenlayer:
+              - "docker/eigenlayer/**"
+            ethereum:
+              - "docker/ethereum/Dockerfile.ethereum"
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Eigenlayer Image
+        if: steps.changes.outputs.eigenlayer == 'true'
+        run: |
+          echo "Something has changed in eigenlayer directory, building image..."
+          cd docker/eigenlayer
+          if [ "${{ github.ref_name }}" == "dev" ]; then
+            docker build -t opacitylabs/eigenlayer-local:dev -f Dockerfile.eigenlayer .
+            docker push opacitylabs/eigenlayer-local:dev
+          elif [ "${{ github.ref_name }}" == "k8s" ]; then
+            docker build -t opacitylabs/eigenlayer:k8s-latest -f Dockerfile.eigenlayer .
+            docker push opacitylabs/eigenlayer:k8s-latest
+          fi
+
+      - name: Build and Push Ethereum Image
+        if: steps.changes.outputs.ethereum == 'true'
+        run: |
+          echo "Ethereum Dockerfile changed, building image..."
+          if [ "${{ github.ref_name }}" == "dev" ]; then
+            docker build -t opacitylabs/ethereum-local:dev -f docker/ethereum/Dockerfile.ethereum docker/ethereum
+            docker push opacitylabs/ethereum-local:dev
+          elif [ "${{ github.ref_name }}" == "k8s" ]; then
+            docker build -t opacitylabs/ethereum:k8s-latest -f docker/ethereum/Dockerfile.ethereum docker/ethereum
+            docker push opacitylabs/ethereum:k8s-latest
+          fi
